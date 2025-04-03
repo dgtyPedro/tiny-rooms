@@ -1,0 +1,7 @@
+Rate limiting
+Input validation
+Cors
+IP Blocking
+Async route
+Force HTTPs
+Create Fallbacks

@@ -33,6 +33,7 @@ export default function App() {
         socket.on("receive_message", (message: Message) => {
             setMessages((prevMessages) => [...prevMessages, message]);
         });
+
         return () => {
             socket.off("receive_message");
         };
@@ -42,13 +43,27 @@ export default function App() {
         navigate(`/${roomToGo}`);
     };
 
-    const sendMessage = () => {
+    const sendMessage = async () => {
         const iid = localStorage.getItem("iid") || "";
         if (!messageToSend || !room || !iid) return;
 
         const message: Message = { iid, text: messageToSend, name: userName, room };
-        socket.emit("send_message", message);
-        setMessageToSend("");
+
+        try {
+            const response = await fetch("http://localhost:4000/send", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(message),
+            });
+
+            if (!response.ok) {
+                console.error("Failed to send message:", await response.json());
+            } else {
+                setMessageToSend("");
+            }
+        } catch (error) {
+            console.error("Error sending message:", error);
+        }
     };
 
     return (
