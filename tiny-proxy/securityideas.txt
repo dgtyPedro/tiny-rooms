@@ -1,7 +1,7 @@
-Rate limiting
-Input validation
-Cors
-IP Blocking
-Async route
-Force HTTPs
-Create Fallbacks
+Rate limiting (AWS WAF, Proxy [iid])
+Input validation (Proxy)
+Cors (AWS API Gateway)
+IP Blocking (AWS WAF)
+Async route (Proxy)
+Force HTTPs (CloudFront, ALB, API Gateway)
+Create Fallbacks (S3 + CloudFront)
