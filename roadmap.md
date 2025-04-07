@@ -40,9 +40,3 @@
 38. [ ] Stress test with multiple connections and message bursts – **30min**
 39. [ ] Document infrastructure (README, diagram, cost breakdown) – **1h**
 40. [ ] Final security audit and IAM least privilege review – **1h**
-
----
-
-✅ Total estimated time: ~ **15h 45min**
-
-> You can adjust based on your team size, prior AWS experience, or automation tools (like Terraform or CDK).
