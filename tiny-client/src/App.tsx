@@ -13,7 +13,7 @@ interface Message {
     iid: string;
 }
 
-const server = import.meta.env.SERVER
+const server = import.meta.env.VITE_SERVER
 const socket: Socket = io(server);
 
 export default function App() {
