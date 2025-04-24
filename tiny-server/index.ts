@@ -1,4 +1,4 @@
-import express, {Request} from "express";
+import express, {Request, Response} from "express";
 import {createServer} from "http";
 import {Server, Socket} from "socket.io";
 import cors from "cors";
@@ -24,8 +24,11 @@ io.on("connection", (socket: Socket) => {
     });
 });
 
-app.post("/send", (req: Request, res: any) => {
-    console.log(req.ip)
+app.get("/ping", (req: Request, res: Response) => {
+    return res.send({success: true, message: `pong, ${req.ip}.`});
+})
+
+app.post("/send", (req: Request, res: Response) => {
     const {iid, text, name, room} = req.body as Message;
 
     if (!iid || !text || !room || !name) {
@@ -40,7 +43,7 @@ app.post("/send", (req: Request, res: any) => {
 
     io.to(room).emit("talk", message);
 
-    return res.json({success: true, message: "Message sent via WebSocket"});
+    return res.json({success: true, message: `Copy that.`});
 });
 
 const port = process.env.PORT;
