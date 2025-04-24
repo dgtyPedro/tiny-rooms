@@ -24,6 +24,11 @@ io.on("connection", (socket: Socket) => {
     });
 });
 
+app.get("/", (req: Request, res: any) => {
+    return res.send({success: true, message: `Hello World.`});
+})
+
+
 app.get("/ping", (req: Request, res: any) => {
     return res.send({success: true, message: `pong, ${req.ip}.`});
 })
@@ -47,6 +52,7 @@ app.post("/send", (req: Request, res: any) => {
 });
 
 const port = process.env.PORT;
+
 httpServer.listen(port, () => {
-    console.log(`Message API running on port: ${port}`);
+    console.log(`Server running on port: ${port}`);
 });
