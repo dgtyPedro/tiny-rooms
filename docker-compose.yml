@@ -1,0 +1,34 @@
+version: '3.8'
+
+services:
+  server:
+    build:
+      context: tiny-server
+      dockerfile: Dockerfile
+    container_name: server
+    image: server-image
+    ports:
+      - "3008:3000"
+    environment:
+      - PORT=3000
+    networks:
+      - tiny-network
+
+  client:
+    build:
+      context: tiny-client
+      dockerfile: Dockerfile
+    container_name: client
+    image: client-image
+    ports:
+      - "88:80"
+    environment:
+      - VITE_SERVER=http://server:3000
+    networks:
+      - tiny-network
+    depends_on:
+      - server
+
+networks:
+  tiny-network:
+    driver: bridge

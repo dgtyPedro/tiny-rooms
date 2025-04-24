@@ -1,4 +1,4 @@
-import express, {Request, Response} from "express";
+import express, {Request} from "express";
 import {createServer} from "http";
 import {Server, Socket} from "socket.io";
 import cors from "cors";
@@ -24,11 +24,11 @@ io.on("connection", (socket: Socket) => {
     });
 });
 
-app.get("/ping", (req: Request, res: Response) => {
+app.get("/ping", (req: Request, res: any) => {
     return res.send({success: true, message: `pong, ${req.ip}.`});
 })
 
-app.post("/send", (req: Request, res: Response) => {
+app.post("/send", (req: Request, res: any) => {
     const {iid, text, name, room} = req.body as Message;
 
     if (!iid || !text || !room || !name) {
