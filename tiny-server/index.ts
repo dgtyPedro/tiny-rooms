@@ -1,6 +1,6 @@
-import express, { Request, Response } from "express";
-import { createServer } from "http";
-import { Server, Socket } from "socket.io";
+import express, {Request} from "express";
+import {createServer} from "http";
+import {Server, Socket} from "socket.io";
 import cors from "cors";
 
 interface Message {
@@ -12,37 +12,37 @@ interface Message {
 
 const app = express();
 const httpServer = createServer(app);
-const io = new Server(httpServer, { cors: { origin: "*" } });
+const io = new Server(httpServer, {cors: {origin: "*"}});
 
 app.use(cors());
 app.use(express.json());
 
 io.on("connection", (socket: Socket) => {
-    socket.on("join_room", (room: string) => {
+    socket.on("join", (room: string) => {
         socket.join(room);
     });
-
-    socket.on("send_message", (data: Message) => {
-        const { iid, text, name, room } = data;
-
-        if (!iid || !text || !room || !name) {
-            return;
-        }
-
-        if (room.length > 5 || text.length > 200) {
-            return;
-        }
-
-        const message: Message = { iid, text, name, room };
-        io.to(room).emit("receive_message", message);
-    });
-
-    // socket.on("disconnect", () => {
-    //     console.log(`User disconnected: ${socket.id}`);
-    // });
 });
 
-const PORT = 3000;
-httpServer.listen(PORT, () => {
-    console.log(`Hello world! Running on port: ${PORT}`);
+app.post("/send", (req: Request, res: any) => {
+    console.log(req.ip)
+    const {iid, text, name, room} = req.body as Message;
+
+    if (!iid || !text || !room || !name) {
+        return res.status(400).json({error: "Invalid message format"});
+    }
+
+    if (room.length > 5 || text.length > 200) {
+        return res.status(400).json({error: "Message or room size exceeded"});
+    }
+
+    const message: Message = {iid, text, name, room};
+
+    io.to(room).emit("talk", message);
+
+    return res.json({success: true, message: "Message sent via WebSocket"});
+});
+
+const port = process.env.PORT;
+httpServer.listen(port, () => {
+    console.log(`Message API running on port: ${port}`);
 });

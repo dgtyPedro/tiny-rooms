@@ -13,7 +13,8 @@ interface Message {
     iid: string;
 }
 
-const socket: Socket = io("http://localhost:3000");
+const server = import.meta.env.SERVER
+const socket: Socket = io(server);
 
 export default function App() {
     const { room } = useParams();
@@ -23,19 +24,21 @@ export default function App() {
     const [messageToSend, setMessageToSend] = useState<string>("");
     const [messages, setMessages] = useState<Message[]>([]);
 
+    const listen = (message: Message) => {
+        setMessages((prevMessages) => [...prevMessages, message]);
+    };
+
     useEffect(() => {
         if (room) {
-            socket.emit("join_room", room);
+            socket.emit("join", room);
         }
     }, [room]);
 
     useEffect(() => {
-        socket.on("receive_message", (message: Message) => {
-            setMessages((prevMessages) => [...prevMessages, message]);
-        });
+        socket.on("talk", listen);
 
         return () => {
-            socket.off("receive_message");
+            socket.off("talk");
         };
     }, []);
 
@@ -50,7 +53,7 @@ export default function App() {
         const message: Message = { iid, text: messageToSend, name: userName, room };
 
         try {
-            const response = await fetch("http://localhost:4000/send", {
+            const response = await fetch(`${server}/send`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(message),
