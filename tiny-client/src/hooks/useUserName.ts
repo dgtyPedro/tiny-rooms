@@ -1,4 +1,5 @@
 import {useState, useEffect} from "react";
+import { v4 as uuidv4 } from 'uuid';
 
 const adjectives = [
     "Swift", "Brave", "Clever", "Fierce", "Loyal", "Mighty", "Silent", "Witty", "Bold", "Noble",
@@ -29,7 +30,7 @@ const nouns = [
 const getOrCreateUUID = () => {
     let uuid = localStorage.getItem("iid");
     if (!uuid) {
-        uuid = crypto.randomUUID();
+        uuid = uuidv4();
         localStorage.setItem("iid", uuid);
     }
     return uuid;
